@@ -4,61 +4,86 @@
   <meta charset="UTF-8" />
   <title>Mangodesk – AI Notes</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; max-width: 720px; margin: 24px auto; padding: 0 12px; }
-    fieldset { margin-bottom: 18px; }
-    textarea { width: 100%; min-height: 200px; }
-    input[type="text"], input[type="email"] { width: 100%; }
-    small { color: #555; }
-    .row { display: flex; gap: 12px; }
-    .row > * { flex: 1; }
-    button { padding: 10px 14px; cursor: pointer; }
-    .muted { color: #777; font-size: 0.9em; }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>Mangodesk – AI Meeting Notes</h1>
-  <p class="muted">Upload a transcript or paste text, add an instruction, then generate and email the summary.</p>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex items-center justify-center p-6">
+  <div class="w-full max-w-4xl bg-white/90 backdrop-blur shadow-2xl rounded-3xl p-10 space-y-10 border border-gray-200">
+    
+    <!-- Header -->
+    <header class="text-center space-y-3">
+      <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight">Mangodesk</h1>
+      <p class="text-lg text-gray-500">AI-powered Meeting Notes & Summaries</p>
+    </header>
 
-  <fieldset>
-    <legend>1) Transcript</legend>
-    <div class="row">
-      <div>
-        <label>Upload .txt</label><br />
-        <input id="file" type="file" accept=".txt,text/plain" />
-        <div><small>Or paste below:</small></div>
+    <!-- Step 1 -->
+    <section class="space-y-3">
+      <h2 class="text-xl font-semibold text-gray-700 flex items-center gap-2">
+        <span class="bg-indigo-600 text-white w-7 h-7 flex items-center justify-center rounded-full text-sm">1</span>
+        Transcript
+      </h2>
+      <div class="space-y-3">
+        <label class="block text-gray-600 font-medium">Upload .txt file</label>
+        <input id="file" type="file" accept=".txt,text/plain"
+          class="block w-full border border-gray-300 rounded-lg px-4 py-3 text-sm shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+        <p class="text-xs text-gray-500">Or paste the transcript below</p>
+        <textarea id="transcript" placeholder="Paste transcript here..."
+          class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 h-48"></textarea>
       </div>
-    </div>
-    <textarea id="transcript" placeholder="Paste transcript here (optional if you upload a .txt file)"></textarea>
-  </fieldset>
+    </section>
 
-  <fieldset>
-    <legend>2) Custom Instruction</legend>
-    <input id="prompt" type="text" placeholder='e.g., "Summarize in bullet points for executives" or "Highlight only action items"' />
-  </fieldset>
+    <!-- Step 2 -->
+    <section class="space-y-3">
+      <h2 class="text-xl font-semibold text-gray-700 flex items-center gap-2">
+        <span class="bg-indigo-600 text-white w-7 h-7 flex items-center justify-center rounded-full text-sm">2</span>
+        Custom Instruction
+      </h2>
+      <input id="prompt" type="text" placeholder='e.g. "Summarize in bullet points"'
+        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+    </section>
 
-  <fieldset>
-    <legend>3) Generate Summary</legend>
-    <button id="btnGenerate">Generate Summary</button>
-    <div id="genStatus" class="muted"></div>
-    <p class="muted mono">Backend: <span id="backendUrl"></span></p>
-  </fieldset>
+    <!-- Step 3 -->
+    <section class="space-y-3">
+      <h2 class="text-xl font-semibold text-gray-700 flex items-center gap-2">
+        <span class="bg-indigo-600 text-white w-7 h-7 flex items-center justify-center rounded-full text-sm">3</span>
+        Generate Summary
+      </h2>
+      <button id="btnGenerate"
+        class="px-6 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 shadow-md transition">
+        ⚡ Generate Summary
+      </button>
+      <div id="genStatus" class="text-sm text-gray-500 mt-2"></div>
+      <p class="text-xs font-mono text-gray-400">Backend: <span id="backendUrl"></span></p>
+    </section>
 
-  <fieldset>
-    <legend>4) Edit Summary</legend>
-    <textarea id="summary" placeholder="Summary will appear here and is fully editable"></textarea>
-  </fieldset>
+    <!-- Step 4 -->
+    <section class="space-y-3">
+      <h2 class="text-xl font-semibold text-gray-700 flex items-center gap-2">
+        <span class="bg-indigo-600 text-white w-7 h-7 flex items-center justify-center rounded-full text-sm">4</span>
+        Edit Summary
+      </h2>
+      <textarea id="summary" placeholder="Summary will appear here..."
+        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 h-48"></textarea>
+    </section>
 
-  <fieldset>
-    <legend>5) Share via Email</legend>
-    <div class="row">
-      <input id="to" type="email" placeholder="recipient@example.com" />
-      <input id="subject" type="text" placeholder="Subject (optional)" />
-    </div><br />
-    <button id="btnSend">Send Email</button>
-    <div id="sendStatus" class="muted"></div>
-  </fieldset>
+    <!-- Step 5 -->
+    <section class="space-y-3">
+      <h2 class="text-xl font-semibold text-gray-700 flex items-center gap-2">
+        <span class="bg-indigo-600 text-white w-7 h-7 flex items-center justify-center rounded-full text-sm">5</span>
+        Share via Email
+      </h2>
+      <div class="flex flex-col md:flex-row gap-4">
+        <input id="to" type="email" placeholder="recipient@example.com"
+          class="flex-1 rounded-xl border border-gray-300 px-4 py-3 text-sm shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+        <input id="subject" type="text" placeholder="Subject (optional)"
+          class="flex-1 rounded-xl border border-gray-300 px-4 py-3 text-sm shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+      </div>
+      <button id="btnSend"
+        class="px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 shadow-md transition">
+        📧 Send Email
+      </button>
+      <div id="sendStatus" class="text-sm text-gray-500 mt-2"></div>
+    </section>
+  </div>
 
   <script src="app.js"></script>
 </body>
